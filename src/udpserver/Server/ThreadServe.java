@@ -2,28 +2,32 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package udpserver;
+package udpserver.Server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static udpserver.Frame.msgIn;
+import udpserver.Client.ThreadClient;
+import udpserver.Interface.Handle;
 
 /**
  *
  * @author PC
  */
-public class ThreadClass  extends Thread{
+public class ThreadServe extends Thread {
     DatagramPacket in  ;
     DatagramSocket dgramSocket ;
-    Handle h ;
+    Handle handle ;
     String message ;
-    public ThreadClass(DatagramPacket in , DatagramSocket dgramSocket, Handle h){
-        this.in = in ;
+    private static byte[] buff = new byte[256];
+    
+    public ThreadServe(DatagramSocket dgramSocket, Handle handle){
+        this.in = new DatagramPacket(buff, buff.length) ;
         this.dgramSocket = dgramSocket ;
-        this.h = h ;
+        this.handle = handle ;
+        
     }
     
 
@@ -34,13 +38,17 @@ public class ThreadClass  extends Thread{
             try {
                 dgramSocket.receive(in);
                 message = new String(in.getData(), 0, in.getLength());
-                h.handle(message);
+                
+                handle.handle(message);
+                
+                
+                
             } catch (IOException ex) {
-                Logger.getLogger(ThreadClass.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ThreadClient.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } while (!message.equals("BYE"));
+        } while (true);
+        
         
        
     }
-    
 }
