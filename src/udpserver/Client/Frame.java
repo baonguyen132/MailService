@@ -38,7 +38,7 @@ public class Frame extends javax.swing.JFrame {
     public Frame() {
         try {
             initComponents();
-            host = InetAddress.getLocalHost();
+            host = InetAddress.getByName("172.20.10.2");
             dgramSocket = new DatagramSocket();
             
           
